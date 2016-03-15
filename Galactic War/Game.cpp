@@ -243,7 +243,7 @@ void Game::CreateDevice()
 	m_fxFactory = std::make_unique<EffectFactory>(m_d3dDevice.Get());
 
 	// Create player model
-	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"DroidFighter.cmo", *m_fxFactory);
+	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"cup.cmo", *m_fxFactory);
 
 	m_world = Matrix::Identity;
 }
