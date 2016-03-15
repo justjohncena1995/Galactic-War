@@ -7,6 +7,7 @@
 
 using namespace DirectX;
 
+
 namespace
 {
     std::unique_ptr<Game> g_game;

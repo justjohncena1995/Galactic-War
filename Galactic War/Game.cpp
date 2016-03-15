@@ -6,6 +6,7 @@
 #include "Game.h"
 
 using namespace DirectX;
+using namespace DirectX::SimpleMath;
 
 using Microsoft::WRL::ComPtr;
 
@@ -53,6 +54,11 @@ void Game::Update(DX::StepTimer const& timer)
     float elapsedTime = float(timer.GetElapsedSeconds());
 
     // TODO: Add your game logic here.
+
+	float time = float(timer.GetTotalSeconds());
+
+	m_world = Matrix::CreateRotationZ(cosf(time) * 2.f);
+
     elapsedTime;
 }
 
@@ -68,6 +74,8 @@ void Game::Render()
     Clear();
 
     // TODO: Add your rendering code here.
+
+	m_model->Draw(m_d3dContext.Get(), *m_states, m_world, m_view, m_proj);
 
     Present();
 }
@@ -229,6 +237,15 @@ void Game::CreateDevice()
         (void)m_d3dContext.As(&m_d3dContext1);
 
     // TODO: Initialize device dependent objects here (independent of window size).
+
+	m_states = std::make_unique<CommonStates>(m_d3dDevice.Get());
+
+	m_fxFactory = std::make_unique<EffectFactory>(m_d3dDevice.Get());
+
+	// Create player model
+	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"cup.cmo", *m_fxFactory);
+
+	m_world = Matrix::Identity;
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
@@ -348,12 +365,21 @@ void Game::CreateResources()
     DX::ThrowIfFailed(m_d3dDevice->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewDesc, m_depthStencilView.ReleaseAndGetAddressOf()));
 
     // TODO: Initialize windows-size dependent objects here.
+
+	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),Vector3::Zero, Vector3::UnitY);
+	
+	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), 0.1f, 10.f);
+
+	
 }
 
 void Game::OnDeviceLost()
 {
     // TODO: Add Direct3D resource cleanup here.
 
+	m_states.reset();
+	m_fxFactory.reset();
+	m_model.reset();
     m_depthStencilView.Reset();
     m_renderTargetView.Reset();
     m_swapChain1.Reset();

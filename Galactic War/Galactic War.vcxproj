@@ -168,12 +168,14 @@
     <ResourceCompile Include="resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="cup.jpg" />
     <Image Include="directx.ico" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cup.cmo" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
