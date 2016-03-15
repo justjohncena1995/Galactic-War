@@ -57,7 +57,8 @@ void Game::Update(DX::StepTimer const& timer)
 
 	float time = float(timer.GetTotalSeconds());
 
-	m_world = Matrix::CreateRotationZ(cosf(time) * 2.f);
+	// rotation for the background
+	m_world = Matrix::CreateRotationY(time / 5);
 
     elapsedTime;
 }
@@ -75,7 +76,13 @@ void Game::Render()
 
     // TODO: Add your rendering code here.
 
+	// Draw player model
 	m_model->Draw(m_d3dContext.Get(), *m_states, m_world, m_view, m_proj);
+
+	m_effect->SetWorld(m_world);
+
+	// Draw background
+	m_background->Draw(m_effect.get(), m_inputLayout.Get());
 
     Present();
 }
@@ -238,12 +245,31 @@ void Game::CreateDevice()
 
     // TODO: Initialize device dependent objects here (independent of window size).
 
-	m_states = std::make_unique<CommonStates>(m_d3dDevice.Get());
+	// lighting
+	m_effect = std::make_unique<BasicEffect>(m_d3dDevice.Get());
+	m_effect->SetTextureEnabled(true);
+	m_effect->SetPerPixelLighting(true);
+	m_effect->SetLightingEnabled(true);
+	m_effect->SetLightEnabled(0, true);
+	m_effect->SetLightDiffuseColor(0, Colors::White);
+	m_effect->SetLightDirection(0, -Vector3::UnitZ);
 
+	
+	m_states = std::make_unique<CommonStates>(m_d3dDevice.Get());
 	m_fxFactory = std::make_unique<EffectFactory>(m_d3dDevice.Get());
 
+	// Creating the background 
+	m_background = GeometricPrimitive::CreateSphere(m_d3dContext.Get(), 7.f, 10, false, true);
+	m_background->CreateInputLayout(m_effect.get(), m_inputLayout.ReleaseAndGetAddressOf());
+
 	// Create player model
-	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"cup.cmo", *m_fxFactory);
+	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"sf.cmo", *m_fxFactory);
+
+	// Texture for background
+	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"background.jpg", nullptr, t_background.ReleaseAndGetAddressOf()));
+
+	// Setting the background
+	m_effect->SetTexture(t_background.Get());
 
 	m_world = Matrix::Identity;
 }
@@ -366,9 +392,14 @@ void Game::CreateResources()
 
     // TODO: Initialize windows-size dependent objects here.
 
+	// Camera Settings
 	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),Vector3(m_world._41,m_world._42,m_world._43), Vector3::UnitY);
 	
 	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), 0.1f, 10.f);
+
+
+	m_effect->SetView(m_view);
+	m_effect->SetProjection(m_proj);
 
 	
 }
@@ -377,6 +408,10 @@ void Game::OnDeviceLost()
 {
     // TODO: Add Direct3D resource cleanup here.
 
+	m_effect.reset();
+	m_inputLayout.Reset();
+	t_background.Reset();
+	m_background.reset();
 	m_states.reset();
 	m_fxFactory.reset();
 	m_model.reset();

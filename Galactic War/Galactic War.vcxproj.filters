@@ -26,6 +26,9 @@
     <Image Include="cup.jpg">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="background.jpg">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest">
