@@ -176,7 +176,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cup.cmo" />
+    <None Include="df.cmo" />
+    <None Include="DroidFighter.cmo" />
+    <None Include="Feisar_ship.cmo" />
+    <None Include="l.cmo" />
     <None Include="packages.config" />
+    <None Include="sf.cmo" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

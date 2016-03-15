@@ -37,5 +37,20 @@
     <None Include="cup.cmo">
       <Filter>Assets</Filter>
     </None>
+    <None Include="df.cmo">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="sf.cmo">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Feisar_ship.cmo">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="l.cmo">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="DroidFighter.cmo">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
 </Project>

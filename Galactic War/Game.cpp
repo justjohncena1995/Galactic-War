@@ -243,7 +243,7 @@ void Game::CreateDevice()
 	m_fxFactory = std::make_unique<EffectFactory>(m_d3dDevice.Get());
 
 	// Create player model
-	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"cup.cmo", *m_fxFactory);
+	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"DroidFighter.cmo", *m_fxFactory);
 
 	m_world = Matrix::Identity;
 }
@@ -366,7 +366,7 @@ void Game::CreateResources()
 
     // TODO: Initialize windows-size dependent objects here.
 
-	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),Vector3::Zero, Vector3::UnitY);
+	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),Vector3(m_world._41,m_world._42,m_world._43), Vector3::UnitY);
 	
 	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), 0.1f, 10.f);
 
