@@ -252,14 +252,14 @@ void Game::CreateDevice()
 	m_effect->SetLightingEnabled(true);
 	m_effect->SetLightEnabled(0, true);
 	m_effect->SetLightDiffuseColor(0, Colors::White);
-	m_effect->SetLightDirection(0, -Vector3::UnitZ);
+	m_effect->SetLightDirection(2.5, -Vector3::UnitZ);
 
 	
 	m_states = std::make_unique<CommonStates>(m_d3dDevice.Get());
 	m_fxFactory = std::make_unique<EffectFactory>(m_d3dDevice.Get());
 
 	// Creating the background 
-	m_background = GeometricPrimitive::CreateSphere(m_d3dContext.Get(), 7.f, 10, false, true);
+	m_background = GeometricPrimitive::CreateSphere(m_d3dContext.Get(), 9.f, 10, false, true);
 	m_background->CreateInputLayout(m_effect.get(), m_inputLayout.ReleaseAndGetAddressOf());
 
 	// Create player model
