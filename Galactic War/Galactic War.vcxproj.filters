@@ -10,11 +10,13 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="StepTimer.h" />
+    <ClInclude Include="Gamestate.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Gamestate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -29,6 +31,18 @@
     <Image Include="background.jpg">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="wasphunter_texture.jpg">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="start.jpg">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="catparty.gif">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="galacticwar.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest">
@@ -40,19 +54,13 @@
     <None Include="cup.cmo">
       <Filter>Assets</Filter>
     </None>
-    <None Include="df.cmo">
+    <None Include="myship.cmo">
       <Filter>Assets</Filter>
     </None>
-    <None Include="sf.cmo">
+    <None Include="myship1.sdkmesh">
       <Filter>Assets</Filter>
     </None>
-    <None Include="Feisar_ship.cmo">
-      <Filter>Assets</Filter>
-    </None>
-    <None Include="l.cmo">
-      <Filter>Assets</Filter>
-    </None>
-    <None Include="DroidFighter.cmo">
+    <None Include="myship1.cmo">
       <Filter>Assets</Filter>
     </None>
   </ItemGroup>

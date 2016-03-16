@@ -4,37 +4,53 @@
 
 #include "pch.h"
 #include "Game.h"
+#include "Gamestate.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
 using Microsoft::WRL::ComPtr;
 
+std::unique_ptr<gameState> theGame(new gameState);
+
 Game::Game() :
     m_window(0),
     m_outputWidth(800),
     m_outputHeight(600),
-    m_featureLevel(D3D_FEATURE_LEVEL_9_1)
+    m_featureLevel(D3D_FEATURE_LEVEL_9_1),
+	m_pitch(0),
+	m_yaw(0)
 {
+ 
 }
 
 // Initialize the Direct3D resources required to run.
 void Game::Initialize(HWND window, int width, int height)
 {
-    m_window = window;
-    m_outputWidth = std::max(width, 1);
-    m_outputHeight = std::max(height, 1);
+	m_window = window;
+	m_outputWidth = std::max(width, 1);
+	m_outputHeight = std::max(height, 1);
 
-    CreateDevice();
+	CreateDevice();
 
-    CreateResources();
+	CreateResources();
 
-    // TODO: Change the timer settings if you want something other than the default variable timestep mode.
-    // e.g. for 60 FPS fixed timestep update logic, call:
-    /*
-    m_timer.SetFixedTimeStep(true);
-    m_timer.SetTargetElapsedSeconds(1.0 / 60);
-    */
+	// TODO: Change the timer settings if you want something other than the default variable timestep mode.
+	// e.g. for 60 FPS fixed timestep update logic, call:
+	/*
+	m_timer.SetFixedTimeStep(true);
+	m_timer.SetTargetElapsedSeconds(1.0 / 60);
+	*/
+
+	// Initialize the mouse and keyboard 
+
+	theGame->setMenu(true);
+
+	m_keyboard = std::make_unique<Keyboard>();
+	m_mouse = std::make_unique<Mouse>();
+	m_mouse->SetWindow(window);
+
+	
 }
 
 // Executes the basic game loop.
@@ -51,14 +67,51 @@ void Game::Tick()
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
-    float elapsedTime = float(timer.GetElapsedSeconds());
+	auto mouse = m_mouse->GetState();
 
     // TODO: Add your game logic here.
 
+	if (theGame->getMenu() == true)
+	{
+		if (mouse.leftButton)
+		{
+			theGame->setMenu(false);
+			theGame->setGame(true);
+		}
+	}
+
+	float elapsedTime = float(timer.GetElapsedSeconds());
 	float time = float(timer.GetTotalSeconds());
 
-	// rotation for the background
-	m_world = Matrix::CreateRotationY(time / 5);
+	// rotation for the game background
+	background = Matrix::CreateRotationY(time / 5);
+
+	// rotation for the menu background
+	background1 = Matrix::CreateRotationY(time / 7);
+
+	// Mouse controls
+
+	
+
+
+	// Keyboard controls
+	auto kb = m_keyboard->GetState();
+	if (kb.Escape)
+	PostQuitMessage(0);
+
+	Vector3 move = Vector3::Zero;
+
+	if (kb.W)
+	{
+		// model *= Matrix::Create
+	}
+
+	if (kb.S)
+	{
+		model *= rotate[1] * trans[0] * move.z += 1.f * model;
+	}
+
+	
 
     elapsedTime;
 }
@@ -76,13 +129,45 @@ void Game::Render()
 
     // TODO: Add your rendering code here.
 
-	// Draw player model
-	m_model->Draw(m_d3dContext.Get(), *m_states, m_world, m_view, m_proj);
+	float y = sinf(m_pitch);
+	float r = cosf(m_pitch);
+	float z = r*cosf(m_yaw);
+	float x = r*sinf(m_yaw);
 
-	m_effect->SetWorld(m_world);
+	if (theGame->getMenu() == true)
+	{
+
+		m_background1->Draw(background1, m_view, m_proj, Colors::White, menuB.Get());
+
+	    m_spriteBatch->Begin();
+
+		m_spriteBatch->Draw(startB.Get(), m_screenPos, nullptr, Colors::White, 0.f, m_origin);
+		m_spriteBatch->Draw(titleT.Get(), m_screenPos1, nullptr, Colors::White, 0.f, m_origin1);
+
+		m_spriteBatch->End();
+
+	}
+
+	if (theGame->getgameP() == true)
+	{
+
+	// Draw player model
+	// m_model->Draw(m_d3dContext.Get(), *m_states, model, m_view, m_proj);
+
+	// Model properties
+		trans[0] = Matrix::CreateTranslation(4.0f, 1.0f, 1.0f);
+		scale[0] = Matrix::CreateScale(0.004);
+		rotate[0] = Matrix::CreateRotationX(4.f);
+		rotate[1] = Matrix::CreateRotationY(1.f);
+		model = trans[0] * scale[0] * rotate[0] * rotate[1];
+	
+		m_effect->SetWorld(m_world);
 
 	// Draw background
-	m_background->Draw(m_effect.get(), m_inputLayout.Get());
+		m_background->Draw(background, m_view, m_proj, Colors::White, t_background.Get());
+	}
+
+	
 
     Present();
 }
@@ -245,6 +330,33 @@ void Game::CreateDevice()
 
     // TODO: Initialize device dependent objects here (independent of window size).
 
+	// Drawing the start button
+	m_spriteBatch = std::make_unique<SpriteBatch>(m_d3dContext.Get());
+
+	ComPtr<ID3D11Resource> resource;
+	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"start.jpg",resource.GetAddressOf(),
+	startB.ReleaseAndGetAddressOf()));
+
+	ComPtr<ID3D11Texture2D> button;
+	DX::ThrowIfFailed(resource.As(&button));
+
+	CD3D11_TEXTURE2D_DESC butDesc;
+	button->GetDesc(&butDesc);
+
+	m_origin.x = float(butDesc.Width / 2);
+	m_origin.y = float(butDesc.Height / 2);
+
+
+	// Drawing the title 
+	m_spriteBatch = std::make_unique<SpriteBatch>(m_d3dContext.Get()); 
+	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"galacticwar.png", resource.GetAddressOf(),
+	titleT.ReleaseAndGetAddressOf()));
+
+	m_origin1.x = float(butDesc.Width / 2);
+	m_origin1.y = float(butDesc.Height / 2);
+
+	
+
 	// lighting
 	m_effect = std::make_unique<BasicEffect>(m_d3dDevice.Get());
 	m_effect->SetTextureEnabled(true);
@@ -262,8 +374,16 @@ void Game::CreateDevice()
 	m_background = GeometricPrimitive::CreateSphere(m_d3dContext.Get(), 9.f, 10, false, true);
 	m_background->CreateInputLayout(m_effect.get(), m_inputLayout.ReleaseAndGetAddressOf());
 
+	// Creating the memu background
+	m_background1 = GeometricPrimitive::CreateSphere(m_d3dContext.Get(), 9.f, 10, false, false);
+	m_background1->CreateInputLayout(m_effect.get(), m_inputLayout.ReleaseAndGetAddressOf());
+
+	// Menu Background
+	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"menubackground.jpg", nullptr,
+	menuB.ReleaseAndGetAddressOf()));
+
 	// Create player model
-	m_model = Model::CreateFromCMO(m_d3dDevice.Get(), L"sf.cmo", *m_fxFactory);
+	m_model = Model::CreateFromSDKMESH(m_d3dDevice.Get(), L"myship1.sdkmesh", *m_fxFactory);
 
 	// Texture for background
 	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"background.jpg", nullptr, t_background.ReleaseAndGetAddressOf()));
@@ -393,10 +513,23 @@ void Game::CreateResources()
     // TODO: Initialize windows-size dependent objects here.
 
 	// Camera Settings
-	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),Vector3(m_world._41,m_world._42,m_world._43), Vector3::UnitY);
+	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),Vector3(model._41,model._42,model._43), Vector3::UnitY);
 	
 	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), 0.1f, 10.f);
 
+	// Settings for the menu background
+	m_fullscreenRect.left = 0;
+	m_fullscreenRect.top = 0;
+	m_fullscreenRect.right = backBufferWidth;
+	m_fullscreenRect.bottom = backBufferHeight;
+
+	// Start button 
+	m_screenPos.x = backBufferWidth / 2.f;
+	m_screenPos.y = backBufferHeight / 3.f;
+
+	// Title 
+	m_screenPos1.x = backBufferWidth / 5.f;
+	m_screenPos1.y = backBufferHeight / 9.1f;
 
 	m_effect->SetView(m_view);
 	m_effect->SetProjection(m_proj);
@@ -408,6 +541,9 @@ void Game::OnDeviceLost()
 {
     // TODO: Add Direct3D resource cleanup here.
 
+	menuB.Reset();
+	m_spriteBatch.reset();
+	startB.Reset();
 	m_effect.reset();
 	m_inputLayout.Reset();
 	t_background.Reset();

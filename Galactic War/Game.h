@@ -63,10 +63,32 @@ private:
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView>  m_depthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> t_background;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> startB;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> menuB;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> titleT;
+
 
 	DirectX::SimpleMath::Matrix m_world;
 	DirectX::SimpleMath::Matrix m_view;
 	DirectX::SimpleMath::Matrix m_proj;
+	DirectX::SimpleMath::Matrix background;
+	DirectX::SimpleMath::Matrix background1;
+	DirectX::SimpleMath::Matrix model;
+	DirectX::SimpleMath::Matrix rotate[2];
+	DirectX::SimpleMath::Matrix trans[2];
+	DirectX::SimpleMath::Matrix scale[2];
+	DirectX::SimpleMath::Vector3 m_cameraPos;
+	DirectX::SimpleMath::Vector2 m_screenPos;
+	DirectX::SimpleMath::Vector2 m_origin;
+	DirectX::SimpleMath::Vector2 m_screenPos1;
+	DirectX::SimpleMath::Vector2 m_origin1;
+	DirectX::SimpleMath::Vector2 m_screenPos2;
+	DirectX::SimpleMath::Vector2 m_origin2;
+
+	RECT m_fullscreenRect;
+
+	float m_pitch;
+	float m_yaw;
 
 
 	std::unique_ptr<DirectX::CommonStates> m_states;
@@ -74,6 +96,12 @@ private:
 	std::unique_ptr<DirectX::Model> m_model;
 	std::unique_ptr<DirectX::BasicEffect> m_effect;
 	std::unique_ptr<DirectX::GeometricPrimitive > m_background;
+	std::unique_ptr<DirectX::GeometricPrimitive > m_background1;
+	std::unique_ptr<DirectX::Keyboard> m_keyboard;
+	std::unique_ptr<DirectX::Mouse> m_mouse;
+	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+	
+	
 	
 
     // Rendering loop timer.

@@ -151,11 +151,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Gamestate.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="StepTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Gamestate.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -169,20 +171,22 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="background.jpg" />
+    <Image Include="catparty.gif" />
     <Image Include="cup.jpg" />
     <Image Include="directx.ico" />
+    <Image Include="galacticwar.png" />
+    <Image Include="start.jpg" />
+    <Image Include="wasphunter_texture.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cup.cmo" />
-    <None Include="df.cmo" />
-    <None Include="DroidFighter.cmo" />
-    <None Include="Feisar_ship.cmo" />
-    <None Include="l.cmo" />
+    <None Include="myship.cmo" />
+    <None Include="myship1.cmo" />
+    <None Include="myship1.sdkmesh" />
     <None Include="packages.config" />
-    <None Include="sf.cmo" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

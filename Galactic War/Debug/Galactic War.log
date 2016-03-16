@@ -1,12 +1,13 @@
-﻿Build started 16/03/2016 12:49:44.
+﻿Build started 16/03/2016 17:22:50.
      1>Project "G:\Galactic-War\Galactic War\Galactic War.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"G:\Galactic-War\packages\directxtk_desktop_2013.2016.2.23.1\build\native\../../build/native/include/" /ZI /nologo /W3 /WX- /Od /Oy- /D HAS_DIRECTXTK /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /arch:SSE2 /fp:fast /Zc:wchar_t /Zc:forScope /Yu"pch.h" /Fp"Debug\Galactic War.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Game.cpp
          Game.cpp
-     1>g:\galactic-war\galactic war\game.cpp(255): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>g:\galactic-war\galactic war\game.cpp(367): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"G:\Galactic-War\Debug\Galactic War.exe" /INCREMENTAL /NOLOGO "G:\Galactic-War\packages\directxtk_desktop_2013.2016.2.23.1\build\native\../../build/native/lib/Win32/Debug/DirectXTKAudioDX.lib" "G:\Galactic-War\packages\directxtk_desktop_2013.2016.2.23.1\build\native\../../build/native/lib/Win32/Debug/DirectXTK.lib" d3d11.lib dxguid.lib uuid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:settings.manifest /DEBUG /PDB:"G:\Galactic-War\Debug\Galactic War.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"G:\Galactic-War\Debug\Galactic War.lib" /MACHINE:X86 Debug\resource.res
          Debug\Game.obj
+         Debug\Gamestate.obj
          Debug\Main.obj
          Debug\pch.obj
          Galactic War.vcxproj -> G:\Galactic-War\Debug\Galactic War.exe
@@ -14,4 +15,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.63
+Time Elapsed 00:00:00.78
