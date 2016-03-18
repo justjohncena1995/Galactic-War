@@ -5,6 +5,8 @@
 #include "pch.h"
 #include "Game.h"
 #include "Gamestate.h"
+#include "Planets.h"
+#include "Player.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -12,6 +14,9 @@ using namespace DirectX::SimpleMath;
 using Microsoft::WRL::ComPtr;
 
 std::unique_ptr<gameState> theGame(new gameState);
+std::unique_ptr<planets> thePlanets(new planets);
+std::unique_ptr<Player> thePlayer(new Player);
+
 
 Game::Game() :
     m_window(0),
@@ -41,9 +46,9 @@ void Game::Initialize(HWND window, int width, int height)
 	m_timer.SetFixedTimeStep(true);
 	m_timer.SetTargetElapsedSeconds(1.0 / 60);
 	*/
-
+	
 	// Initialize the mouse and keyboard 
-
+	
 	theGame->setMenu(true);
 
 	m_keyboard = std::make_unique<Keyboard>();
@@ -89,10 +94,13 @@ void Game::Update(DX::StepTimer const& timer)
 	// rotation for the menu background
 	background1 = Matrix::CreateRotationY(time / 7);
 
+	// rotation for shape
+	// thePlanets->world = Matrix::CreateRotationY(time / 2);
+
 	// Mouse controls
 
 	
-
+	
 
 	// Keyboard controls
 	auto kb = m_keyboard->GetState();
@@ -108,7 +116,7 @@ void Game::Update(DX::StepTimer const& timer)
 
 	if (kb.S)
 	{
-		model *= rotate[1] * trans[0] * move.z += 1.f * model;
+		
 	}
 
 	
@@ -139,11 +147,16 @@ void Game::Render()
 
 		m_background1->Draw(background1, m_view, m_proj, Colors::White, menuB.Get());
 
+		// Begin spriteBatch
 	    m_spriteBatch->Begin();
 
+		// Draw stsrt button
 		m_spriteBatch->Draw(startB.Get(), m_screenPos, nullptr, Colors::White, 0.f, m_origin);
+
+		// Draw title 
 		m_spriteBatch->Draw(titleT.Get(), m_screenPos1, nullptr, Colors::White, 0.f, m_origin1);
 
+		// End spriteBatch
 		m_spriteBatch->End();
 
 	}
@@ -151,19 +164,22 @@ void Game::Render()
 	if (theGame->getgameP() == true)
 	{
 
-	// Draw player model
-	// m_model->Draw(m_d3dContext.Get(), *m_states, model, m_view, m_proj);
+	    // Draw player model
+	    thePlayer->m_model->Draw(m_d3dContext.Get(), *m_states, thePlayer->model, m_view, m_proj);
+		
+		// Drawing 
+		//thePlanets->world->Draw(m_world, m_view, m_proj);
 
-	// Model properties
+    	// Model properties
 		trans[0] = Matrix::CreateTranslation(4.0f, 1.0f, 1.0f);
 		scale[0] = Matrix::CreateScale(0.004);
 		rotate[0] = Matrix::CreateRotationX(4.f);
 		rotate[1] = Matrix::CreateRotationY(1.f);
-		model = trans[0] * scale[0] * rotate[0] * rotate[1];
+		// thePlayer->model = trans[0] * scale[0] * rotate[0] * rotate[1];
 	
 		m_effect->SetWorld(m_world);
 
-	// Draw background
+	   // Draw background
 		m_background->Draw(background, m_view, m_proj, Colors::White, t_background.Get());
 	}
 
@@ -355,7 +371,8 @@ void Game::CreateDevice()
 	m_origin1.x = float(butDesc.Width / 2);
 	m_origin1.y = float(butDesc.Height / 2);
 
-	
+	// Initializing planet 
+	thePlanets->world = GeometricPrimitive::CreateSphere(m_d3dContext.Get());
 
 	// lighting
 	m_effect = std::make_unique<BasicEffect>(m_d3dDevice.Get());
@@ -383,7 +400,7 @@ void Game::CreateDevice()
 	menuB.ReleaseAndGetAddressOf()));
 
 	// Create player model
-	m_model = Model::CreateFromSDKMESH(m_d3dDevice.Get(), L"myship1.sdkmesh", *m_fxFactory);
+	thePlayer->m_model = Model::CreateFromSDKMESH(m_d3dDevice.Get(), L"myship1.sdkmesh", *m_fxFactory);
 
 	// Texture for background
 	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"background.jpg", nullptr, t_background.ReleaseAndGetAddressOf()));
@@ -541,6 +558,7 @@ void Game::OnDeviceLost()
 {
     // TODO: Add Direct3D resource cleanup here.
 
+	world.reset();
 	menuB.Reset();
 	m_spriteBatch.reset();
 	startB.Reset();

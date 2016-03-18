@@ -4,6 +4,7 @@
 
 #include "pch.h"
 #include "Game.h"
+#include "Planets.h"
 
 using namespace DirectX;
 
@@ -11,7 +12,10 @@ using namespace DirectX;
 namespace
 {
     std::unique_ptr<Game> g_game;
+	
 };
+
+
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -26,6 +30,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
         return 1;
 
     g_game = std::make_unique<Game>();
+	
 
     // Register class and create window
     {

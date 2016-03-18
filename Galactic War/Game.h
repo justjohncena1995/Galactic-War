@@ -37,6 +37,10 @@ public:
     // Properties
     void GetDefaultSize( int& width, int& height ) const;
 
+	protected:
+		std::unique_ptr<DirectX::GeometricPrimitive > world;
+		DirectX::SimpleMath::Matrix model;
+
 private:
 
     void Update(DX::StepTimer const& timer);
@@ -66,6 +70,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> startB;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> menuB;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> titleT;
+	
 
 
 	DirectX::SimpleMath::Matrix m_world;
@@ -73,7 +78,7 @@ private:
 	DirectX::SimpleMath::Matrix m_proj;
 	DirectX::SimpleMath::Matrix background;
 	DirectX::SimpleMath::Matrix background1;
-	DirectX::SimpleMath::Matrix model;
+
 	DirectX::SimpleMath::Matrix rotate[2];
 	DirectX::SimpleMath::Matrix trans[2];
 	DirectX::SimpleMath::Matrix scale[2];
@@ -97,6 +102,7 @@ private:
 	std::unique_ptr<DirectX::BasicEffect> m_effect;
 	std::unique_ptr<DirectX::GeometricPrimitive > m_background;
 	std::unique_ptr<DirectX::GeometricPrimitive > m_background1;
+	std::unique_ptr<DirectX::GeometricPrimitive > planets;
 	std::unique_ptr<DirectX::Keyboard> m_keyboard;
 	std::unique_ptr<DirectX::Mouse> m_mouse;
 	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;

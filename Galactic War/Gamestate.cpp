@@ -8,6 +8,11 @@ gameState::gameState()
 	gameplay = false;
 }
 
+gameState::~gameState()
+{
+
+}
+
 // Getters
 bool gameState::getgameP()
 {

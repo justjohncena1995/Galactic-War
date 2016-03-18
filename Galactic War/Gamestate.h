@@ -6,6 +6,7 @@ class gameState
 public:
 
 	gameState();
+	~gameState();
 
 	// Getters Prototypes
 
