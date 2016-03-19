@@ -13,6 +13,7 @@
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="Planets.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Menu.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -21,6 +22,7 @@
     <ClCompile Include="Gamestate.cpp" />
     <ClCompile Include="Planets.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

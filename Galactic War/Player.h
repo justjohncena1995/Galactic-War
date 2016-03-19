@@ -10,5 +10,5 @@ class Player : public Game
 		~Player();
 
 	private:
-
+		
 };

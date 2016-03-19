@@ -7,6 +7,7 @@
 #include "Gamestate.h"
 #include "Planets.h"
 #include "Player.h"
+#include "Menu.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -16,6 +17,8 @@ using Microsoft::WRL::ComPtr;
 std::unique_ptr<gameState> theGame(new gameState);
 std::unique_ptr<planets> thePlanets(new planets);
 std::unique_ptr<Player> thePlayer(new Player);
+std::unique_ptr<Menu> theMenu(new Menu);
+
 
 
 Game::Game() :
@@ -47,13 +50,23 @@ void Game::Initialize(HWND window, int width, int height)
 	m_timer.SetTargetElapsedSeconds(1.0 / 60);
 	*/
 	
-	// Initialize the mouse and keyboard 
 	
+	// Setting the menu up first
 	theGame->setMenu(true);
 
+	// Initialize the mouse and keyboard 
 	m_keyboard = std::make_unique<Keyboard>();
 	m_mouse = std::make_unique<Mouse>();
 	m_mouse->SetWindow(window);
+
+
+	// Model properties
+	trans[0] = Matrix::CreateTranslation(4.0f, 1.0f, 1.0f);
+	scale[0] = Matrix::CreateScale(0.002);
+	rotate[0] = Matrix::CreateRotationX(4.f);
+	rotate[1] = Matrix::CreateRotationY(1.f);
+	thePlayer->model = trans[0] * scale[0] * rotate[0] * rotate[1];
+
 
 	
 }
@@ -73,15 +86,19 @@ void Game::Tick()
 void Game::Update(DX::StepTimer const& timer)
 {
 	auto mouse = m_mouse->GetState();
-
+	
     // TODO: Add your game logic here.
 
 	if (theGame->getMenu() == true)
 	{
-		if (mouse.leftButton)
+		if ((mouse.x > startRect.left && mouse.x < startRect.right) && (mouse.y > startRect.top && mouse.y < startRect.bottom))
 		{
+			
+			if (mouse.leftButton)
+			{ 
 			theGame->setMenu(false);
 			theGame->setGame(true);
+			}
 		}
 	}
 
@@ -89,7 +106,7 @@ void Game::Update(DX::StepTimer const& timer)
 	float time = float(timer.GetTotalSeconds());
 
 	// rotation for the game background
-	background = Matrix::CreateRotationY(time / 5);
+	background = Matrix::CreateRotationX(time / 5);
 
 	// rotation for the menu background
 	background1 = Matrix::CreateRotationY(time / 7);
@@ -107,19 +124,26 @@ void Game::Update(DX::StepTimer const& timer)
 	if (kb.Escape)
 	PostQuitMessage(0);
 
-	Vector3 move = Vector3::Zero;
-
-	if (kb.W)
+	// Setting the controls to work when game is true
+	if (theGame->getgameP() == true)
 	{
-		// model *= Matrix::Create
-	}
+		// Movement for player
+		if (kb.A)
+		{
+			thePlayer->model = Matrix::CreateTranslation(-Vector3::Right) * Matrix::CreateRotationY(-0.1f) * thePlayer->model;
+		}
 
-	if (kb.S)
-	{
-		
-	}
+		if (kb.S)
+		{
+			thePlayer->model = Matrix::CreateTranslation(-Vector3::Backward * 8) * Matrix::CreateRotationY(.0f) * thePlayer->model;
+		}
 
-	
+		if (kb.D)
+		{
+			thePlayer->model = Matrix::CreateTranslation(-Vector3::Left) * Matrix::CreateRotationY(0.1f) * thePlayer->model;;
+		}
+
+	}
 
     elapsedTime;
 }
@@ -142,20 +166,20 @@ void Game::Render()
 	float z = r*cosf(m_yaw);
 	float x = r*sinf(m_yaw);
 
+	
+
 	if (theGame->getMenu() == true)
 	{
-
+		
 		m_background1->Draw(background1, m_view, m_proj, Colors::White, menuB.Get());
-
+		//thePlanets->cubes();
+	
 		// Begin spriteBatch
 	    m_spriteBatch->Begin();
-
-		// Draw stsrt button
-		m_spriteBatch->Draw(startB.Get(), m_screenPos, nullptr, Colors::White, 0.f, m_origin);
-
+		// Draw start button
+		m_spriteBatch->Draw(startB.Get(), startRect, nullptr, Colors::White, 0.f, XMFLOAT2(-250.f, -1.f));
 		// Draw title 
 		m_spriteBatch->Draw(titleT.Get(), m_screenPos1, nullptr, Colors::White, 0.f, m_origin1);
-
 		// End spriteBatch
 		m_spriteBatch->End();
 
@@ -165,20 +189,11 @@ void Game::Render()
 	{
 
 	    // Draw player model
-	    thePlayer->m_model->Draw(m_d3dContext.Get(), *m_states, thePlayer->model, m_view, m_proj);
-		
+		thePlayer->m_model->Draw(m_d3dContext.Get(), *m_states, thePlayer->model, m_view, m_proj);
 		// Drawing 
-		//thePlanets->world->Draw(m_world, m_view, m_proj);
 
-    	// Model properties
-		trans[0] = Matrix::CreateTranslation(4.0f, 1.0f, 1.0f);
-		scale[0] = Matrix::CreateScale(0.004);
-		rotate[0] = Matrix::CreateRotationX(4.f);
-		rotate[1] = Matrix::CreateRotationY(1.f);
-		// thePlayer->model = trans[0] * scale[0] * rotate[0] * rotate[1];
-	
+		// thePlanets->world->Draw(m_world, m_view, m_proj);
 		m_effect->SetWorld(m_world);
-
 	   // Draw background
 		m_background->Draw(background, m_view, m_proj, Colors::White, t_background.Get());
 	}
@@ -348,7 +363,7 @@ void Game::CreateDevice()
 
 	// Drawing the start button
 	m_spriteBatch = std::make_unique<SpriteBatch>(m_d3dContext.Get());
-
+	
 	ComPtr<ID3D11Resource> resource;
 	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"start.jpg",resource.GetAddressOf(),
 	startB.ReleaseAndGetAddressOf()));
@@ -372,7 +387,8 @@ void Game::CreateDevice()
 	m_origin1.y = float(butDesc.Height / 2);
 
 	// Initializing planet 
-	thePlanets->world = GeometricPrimitive::CreateSphere(m_d3dContext.Get());
+	
+	
 
 	// lighting
 	m_effect = std::make_unique<BasicEffect>(m_d3dDevice.Get());
@@ -540,6 +556,14 @@ void Game::CreateResources()
 	m_fullscreenRect.right = backBufferWidth;
 	m_fullscreenRect.bottom = backBufferHeight;
 
+	// Start Button 
+	startRect.left = 0;
+	startRect.right = 154;
+	startRect.bottom = 43;
+	startRect.top = 0;
+
+	
+
 	// Start button 
 	m_screenPos.x = backBufferWidth / 2.f;
 	m_screenPos.y = backBufferHeight / 3.f;
@@ -558,7 +582,7 @@ void Game::OnDeviceLost()
 {
     // TODO: Add Direct3D resource cleanup here.
 
-	world.reset();
+	world[0].reset();
 	menuB.Reset();
 	m_spriteBatch.reset();
 	startB.Reset();

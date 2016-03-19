@@ -38,8 +38,33 @@ public:
     void GetDefaultSize( int& width, int& height ) const;
 
 	protected:
-		std::unique_ptr<DirectX::GeometricPrimitive > world;
+
+		DirectX::SimpleMath::Matrix m_world;
+		DirectX::SimpleMath::Matrix m_view;
+		DirectX::SimpleMath::Matrix m_proj;
+
+		// Properties for Cube class
+		std::unique_ptr<DirectX::GeometricPrimitive > world[4];
+
+		// Properties for Player class
 		DirectX::SimpleMath::Matrix model;
+
+		// Properties for Menu class
+		
+		DirectX::SimpleMath::Matrix background1;
+		DirectX::SimpleMath::Vector2 m_origin;
+		DirectX::SimpleMath::Vector2 m_screenPos1;
+		DirectX::SimpleMath::Vector2 m_origin1;
+		DirectX::SimpleMath::Vector2 m_screenPos2;
+		DirectX::SimpleMath::Vector2 m_origin2;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> startB;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> menuB;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> titleT;
+		std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+		RECT startRect;
+		
+
+
 
 private:
 
@@ -67,28 +92,18 @@ private:
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView>  m_depthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> t_background;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> startB;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> menuB;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> titleT;
 	
 
-
-	DirectX::SimpleMath::Matrix m_world;
-	DirectX::SimpleMath::Matrix m_view;
-	DirectX::SimpleMath::Matrix m_proj;
 	DirectX::SimpleMath::Matrix background;
-	DirectX::SimpleMath::Matrix background1;
+	
+	
 
 	DirectX::SimpleMath::Matrix rotate[2];
 	DirectX::SimpleMath::Matrix trans[2];
 	DirectX::SimpleMath::Matrix scale[2];
 	DirectX::SimpleMath::Vector3 m_cameraPos;
 	DirectX::SimpleMath::Vector2 m_screenPos;
-	DirectX::SimpleMath::Vector2 m_origin;
-	DirectX::SimpleMath::Vector2 m_screenPos1;
-	DirectX::SimpleMath::Vector2 m_origin1;
-	DirectX::SimpleMath::Vector2 m_screenPos2;
-	DirectX::SimpleMath::Vector2 m_origin2;
+	
 
 	RECT m_fullscreenRect;
 
@@ -105,7 +120,7 @@ private:
 	std::unique_ptr<DirectX::GeometricPrimitive > planets;
 	std::unique_ptr<DirectX::Keyboard> m_keyboard;
 	std::unique_ptr<DirectX::Mouse> m_mouse;
-	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+	 	
 	
 	
 	
