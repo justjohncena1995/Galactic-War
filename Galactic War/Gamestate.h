@@ -9,13 +9,11 @@ public:
 	~gameState();
 
 	// Getters Prototypes
-
 	bool getPaused();
 	bool getMenu();
 	bool getgameP();
 
 	// Setters Prototypes
-
 	void setPaused(bool thePaused);
 	void setMenu(bool theMenu);
 	void setGame(bool theGame);

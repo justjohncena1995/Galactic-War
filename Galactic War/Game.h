@@ -48,6 +48,10 @@ public:
 
 		// Properties for Player class
 		DirectX::SimpleMath::Matrix model;
+		DirectX::SimpleMath::Matrix model1;
+		DirectX::SimpleMath::Vector3 bulletLocation;
+		DirectX::SimpleMath::Matrix m_bullet;
+		
 
 		// Properties for Menu class
 		
@@ -59,13 +63,17 @@ public:
 		DirectX::SimpleMath::Vector2 m_origin2;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> startB;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> menuB;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> exitB;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> titleT;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> moonT;
 		std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 		RECT startRect;
+		RECT exitRect;
+
 		
 
 
-
+		
 private:
 
     void Update(DX::StepTimer const& timer);
@@ -98,9 +106,9 @@ private:
 	
 	
 
-	DirectX::SimpleMath::Matrix rotate[2];
-	DirectX::SimpleMath::Matrix trans[2];
-	DirectX::SimpleMath::Matrix scale[2];
+	DirectX::SimpleMath::Matrix rotate[4];
+	DirectX::SimpleMath::Matrix trans[4];
+	DirectX::SimpleMath::Matrix scale[4];
 	DirectX::SimpleMath::Vector3 m_cameraPos;
 	DirectX::SimpleMath::Vector2 m_screenPos;
 	
@@ -114,6 +122,7 @@ private:
 	std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::IEffectFactory> m_fxFactory;
 	std::unique_ptr<DirectX::Model> m_model;
+	std::unique_ptr<DirectX::Model> m_model1;
 	std::unique_ptr<DirectX::BasicEffect> m_effect;
 	std::unique_ptr<DirectX::GeometricPrimitive > m_background;
 	std::unique_ptr<DirectX::GeometricPrimitive > m_background1;

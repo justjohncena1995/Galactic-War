@@ -14,6 +14,7 @@
     <ClInclude Include="Planets.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="Bullets.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -23,6 +24,7 @@
     <ClCompile Include="Planets.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="Bullets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -69,5 +71,6 @@
     <None Include="myship1.cmo">
       <Filter>Assets</Filter>
     </None>
+    <None Include="sc.sdkmesh" />
   </ItemGroup>
 </Project>
