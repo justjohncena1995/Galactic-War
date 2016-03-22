@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Menu.h"
 #include "Bullets.h"
+#include "Asteroid.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -23,6 +24,7 @@ std::unique_ptr<planets> thePlanets(new planets);
 std::unique_ptr<Player> thePlayer(new Player);
 std::unique_ptr<Menu> theMenu(new Menu);
 std::unique_ptr<Bullets> theBullets(new Bullets);
+std::unique_ptr<Asteroid> theAsteroids(new Asteroid);
 
 
 Game::Game() :
@@ -65,9 +67,11 @@ void Game::Initialize(HWND window, int width, int height)
 
 	// Player's Model properties
 	thePlayer->playerlProperties();
-	thePlayer->player2Properties();
+	
 
 
+	std::random_device rd;
+	m_random = std::make_unique<std::mt19937>(rd());
 
 
 	
@@ -119,7 +123,8 @@ void Game::Update(DX::StepTimer const& timer)
 	background1 = Matrix::CreateRotationY(time / 7);
 
 	
-	bulletLocation = Vector3(model._41, model._42 - 1, model._43 - 1);
+	
+
 	
 
 	// Keyboard controls
@@ -127,9 +132,26 @@ void Game::Update(DX::StepTimer const& timer)
 	if (kb.Escape)
 	PostQuitMessage(0);
 	
-	// Setting the controls to work when game is true
 	if (theGame->getgameP() == true)
 	{
+		for (int i = 0; i < 20; i++)
+		{
+			model1[i] = Matrix::CreateRotationY(1.0f);
+			model1[i] = Matrix::CreateScale(0.009);
+			std::uniform_real_distribution<float> distX(-5.f, 10.f);
+			std::uniform_real_distribution<float> distY(-5.f, 10.f);
+		    std::uniform_real_distribution<float> rotation(0.f, 360.f);
+
+			theAsteroids->setXpos(distX(*m_random));
+			theAsteroids->setYpos(distY(*m_random));
+
+
+			model1[i] *= Matrix::CreateRotationY(rotation(*m_random));
+			model1[i] *= Matrix::CreateTranslation(Vector3(theAsteroids->getXpos(), theAsteroids->getYpos(), 0.0f));
+		}
+		
+	
+
 		// Movement for player 1
 		if (kb.A)
 		{
@@ -145,37 +167,10 @@ void Game::Update(DX::StepTimer const& timer)
 		{
 			thePlayer->model = Matrix::CreateTranslation(-Vector3::Left) * Matrix::CreateRotationY(0.1f) * thePlayer->model;;
 		}
-
-		if (kb.Space)
-		{
-			thePlayer->setBulletFired(true);
-
-			m_bullet = Matrix::CreateTranslation(bulletLocation);
-			m_bullet = Matrix::CreateRotationY(0.00f) * model;  
-		}
-
-		// Movement for player 1
-		if (kb.Down)
-		{
-			thePlayer->model1 = Matrix::CreateTranslation(-Vector3::Backward * 8) * Matrix::CreateRotationY(0.f) * thePlayer->model1;
-		}
-		if (kb.Left)
-		{
-			thePlayer->model1 = Matrix::CreateTranslation(-Vector3::Right) * Matrix::CreateRotationY(-0.1f) * thePlayer->model1;
-		}
-		if (kb.Right)
-		{
-			thePlayer->model1 = Matrix::CreateTranslation(-Vector3::Left) * Matrix::CreateRotationY(0.1f) * thePlayer->model1;
-		}
-
-		if (thePlayer->getBulletFired() == true)
-		{
-			m_bullet = Matrix::CreateRotationY(0.00f) * Matrix::CreateTranslation(Vector3(Vector3::Forward * 1.f)) * m_bullet;
-		}
-
+		
 	}
 
-	// Bullet Collision
+
 	
 	
 
@@ -225,16 +220,18 @@ void Game::Render()
 
 	if (theGame->getgameP() == true)
 	{
-		
-		// Draw player 1 bullet
-		world[0]->Draw(m_bullet, m_view, m_proj);
-
+			
 		// Draw player model
 		thePlayer->m_model->Draw(m_d3dContext.Get(), *m_states, thePlayer->model, m_view, m_proj);
 
-		// Draw second model
-		thePlayer->m_model1->Draw(m_d3dContext.Get(), *m_states, thePlayer->model1, m_view, m_proj);
+		
+		for (int j = 0; j < 20; j++)
+		{
+			asteroid->Draw(m_d3dContext.Get(), *m_states, model1[j], m_view, m_proj);
+		}
 
+		
+		
 	   // Draw background
 		m_background->Draw(background, m_view, m_proj, Colors::White, t_background.Get());	
 
@@ -429,15 +426,6 @@ void Game::CreateDevice()
 	m_origin1.x = float(butDesc.Width / 2);
 	m_origin1.y = float(butDesc.Height / 2);
 
-	// lighting
-	m_effect = std::make_unique<BasicEffect>(m_d3dDevice.Get());
-	m_effect->SetTextureEnabled(true);
-	m_effect->SetPerPixelLighting(true);
-	m_effect->SetLightingEnabled(true);
-	m_effect->SetLightEnabled(0, true);
-	m_effect->SetLightDiffuseColor(0, Colors::White);
-	m_effect->SetLightDirection(2.5, -Vector3::UnitZ);
-
 	// Creating the common states for the model
 	m_states = std::make_unique<CommonStates>(m_d3dDevice.Get());
 	// Creating the factory for the sharing and texture resources
@@ -463,7 +451,7 @@ void Game::CreateDevice()
 	thePlayer->m_model = Model::CreateFromSDKMESH(m_d3dDevice.Get(), L"myship1.sdkmesh", *m_fxFactory);
 	
 	// Creating second player
-	thePlayer->m_model1 = Model::CreateFromSDKMESH(m_d3dDevice.Get(), L"myship1.sdkmesh", *m_fxFactory);
+	asteroid = Model::CreateFromSDKMESH(m_d3dDevice.Get(), L"rock1.sdkmesh", *m_fxFactory);
 
 	// Texture for background
 	DX::ThrowIfFailed(CreateWICTextureFromFile(m_d3dDevice.Get(), L"background.jpg", nullptr, t_background.ReleaseAndGetAddressOf()));
@@ -593,7 +581,7 @@ void Game::CreateResources()
     // TODO: Initialize windows-size dependent objects here.
 
 	// Camera Settings
-	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),Vector3(model._41,model._42,model._43), Vector3::UnitY);
+	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),Vector3(thePlayer->model._41,thePlayer->model._42 -3,thePlayer->model._43 -3), Vector3::UnitY);
 	// Projection settings
 	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, float(backBufferWidth) / float(backBufferHeight), 0.1f, 10.f);
 
@@ -637,7 +625,7 @@ void Game::OnDeviceLost()
 	m_background.reset();
 	m_states.reset();
 	m_fxFactory.reset();
-	m_model1.reset();
+	asteroid.reset();
 	m_model.reset();
     m_depthStencilView.Reset();
     m_renderTargetView.Reset();

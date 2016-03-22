@@ -150,6 +150,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Asteroid.h" />
     <ClInclude Include="Bullets.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Gamestate.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="StepTimer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="Bullets.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Gamestate.cpp" />
@@ -195,6 +197,7 @@
     <None Include="myship1.cmo" />
     <None Include="myship1.sdkmesh" />
     <None Include="packages.config" />
+    <None Include="rock1.sdkmesh" />
     <None Include="sc.sdkmesh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

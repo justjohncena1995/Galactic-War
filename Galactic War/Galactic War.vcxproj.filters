@@ -15,6 +15,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Bullets.h" />
+    <ClInclude Include="Asteroid.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -25,6 +26,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Bullets.cpp" />
+    <ClCompile Include="Asteroid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -72,5 +74,6 @@
       <Filter>Assets</Filter>
     </None>
     <None Include="sc.sdkmesh" />
+    <None Include="rock1.sdkmesh" />
   </ItemGroup>
 </Project>

@@ -48,7 +48,7 @@ public:
 
 		// Properties for Player class
 		DirectX::SimpleMath::Matrix model;
-		DirectX::SimpleMath::Matrix model1;
+		DirectX::SimpleMath::Matrix model1[20];
 		DirectX::SimpleMath::Vector3 bulletLocation;
 		DirectX::SimpleMath::Matrix m_bullet;
 		
@@ -109,6 +109,7 @@ private:
 	DirectX::SimpleMath::Matrix rotate[4];
 	DirectX::SimpleMath::Matrix trans[4];
 	DirectX::SimpleMath::Matrix scale[4];
+	DirectX::SimpleMath::Matrix rockScale;
 	DirectX::SimpleMath::Vector3 m_cameraPos;
 	DirectX::SimpleMath::Vector2 m_screenPos;
 	
@@ -122,13 +123,14 @@ private:
 	std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::IEffectFactory> m_fxFactory;
 	std::unique_ptr<DirectX::Model> m_model;
-	std::unique_ptr<DirectX::Model> m_model1;
+	std::unique_ptr<DirectX::Model> asteroid;
 	std::unique_ptr<DirectX::BasicEffect> m_effect;
 	std::unique_ptr<DirectX::GeometricPrimitive > m_background;
 	std::unique_ptr<DirectX::GeometricPrimitive > m_background1;
 	std::unique_ptr<DirectX::GeometricPrimitive > planets;
 	std::unique_ptr<DirectX::Keyboard> m_keyboard;
 	std::unique_ptr<DirectX::Mouse> m_mouse;
+	std::unique_ptr<std::mt19937> m_random;
 	 	
 	
 	

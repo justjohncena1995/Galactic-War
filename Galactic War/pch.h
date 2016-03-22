@@ -42,6 +42,7 @@
 #include "SpriteFont.h"
 #include "VertexTypes.h"
 #include "WICTextureLoader.h"
+#include <random>
 
 namespace DX
 {

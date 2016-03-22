@@ -10,7 +10,6 @@ class Player : public Game
 		~Player();
 		void playerlProperties();
 		void playerMovement();
-		void player2Properties();
 		void detectCollision(float p1xpos, float p1ypos, float p2xpos, float p2ypos, bool detect);
 
 		// Getters 
@@ -25,14 +24,14 @@ class Player : public Game
 		void setBulletFired(bool theFire);
 
 	private:
-		DirectX::SimpleMath::Matrix rotate[2];
-		DirectX::SimpleMath::Matrix trans[2];
-		DirectX::SimpleMath::Matrix scale[2];
-		std::unique_ptr<DirectX::Keyboard> m_keyboard;
+		
 
 	protected:
 		float xpos;
-		float ypos;
+		float ypos;DirectX::SimpleMath::Matrix rotate[2];
+		DirectX::SimpleMath::Matrix trans[2];
+		DirectX::SimpleMath::Matrix scale[2];
+		std::unique_ptr<DirectX::Keyboard> m_keyboard;
 		bool bulletFired;
 		
 };
